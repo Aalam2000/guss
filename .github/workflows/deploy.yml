@@ -24,17 +24,18 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 bona@45.12.73.228 <<'SSH'
           set -euo pipefail
-          
+
           cd /var/www/guss
-          
-          # обновляем код
+
+          # Обновляем код
           git fetch origin master
           git reset --hard origin/master
 
-          # сборка контейнеров guss
+          # Пересобираем Docker-проект GUSS
           docker compose down
           docker compose up -d --build
 
-          # чистка висячих образов
+          # Чистка мусора
           docker image prune -f
+
           SSH
