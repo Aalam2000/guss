@@ -32,4 +32,5 @@ prisma/migrations/
 .DS_Store
 Thumbs.db
 
+# temporary
 tmp/
