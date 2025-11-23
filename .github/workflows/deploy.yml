@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yml
 name: Deploy GUSS to Server
 
 on:
@@ -16,26 +15,26 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/assistchat_deploy
+          chmod 600 ~/.ssh/assistchat_deploy
           ssh-keyscan -H 45.12.73.228 >> ~/.ssh/known_hosts
 
-      - name: Deploy to server
+      - name: Deploy GUSS
         run: |
-          ssh -i ~/.ssh/id_ed25519 bona@45.12.73.228 <<'SSH'
+          ssh -i ~/.ssh/assistchat_deploy bona@45.12.73.228 << 'SSH'
           set -euo pipefail
 
           cd /var/www/guss
 
-          # Обновляем код
+          echo ">>> PULLING LATEST"
           git fetch origin master
           git reset --hard origin/master
 
-          # Пересобираем Docker-проект GUSS
+          echo ">>> RESTARTING DOCKER"
           docker compose down
           docker compose up -d --build
 
-          # Чистка мусора
+          echo ">>> CLEANUP"
           docker image prune -f
 
           SSH
