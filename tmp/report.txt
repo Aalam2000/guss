@@ -1,0 +1,87 @@
+﻿
+===============================
+        GUSS DEV REPORT
+===============================
+
+=== CONTEXT ===
+Running in PyCharm terminal: True
+Current folder: C:\DATA\PROJECTS\guss
+Console Encoding: Кириллица (DOS)
+
+=== SYSTEM ===
+Windows: Windows 10 Pro
+PowerShell: 5.1.26100.7019
+Node: v24.11.1
+npm: 11.6.2
+Git: git version 2.50.1.windows.1
+Docker: Docker version 29.0.1, build eedd969
+Docker Compose: Docker Compose version v2.40.3-desktop.1
+
+=== DOCKER STATUS ===
+
+--- Ports ---
+5432 Postgres: True
+3000 Backend:  True
+5173 Frontend: True
+
+=== BACKEND LOG (LAST 40) ===
+
+=== FRONTEND LOG (LAST 40) ===
+
+=== POSTGRES LOG (LAST 40) ===
+
+=== PROJECT FILES ===
+
+[backend/package.json]
+ - backend/package.json
+
+[backend/tsconfig.json]
+ - backend/tsconfig.json
+
+[backend/Dockerfile]
+ - backend/Dockerfile
+
+[backend/.env]
+ - backend/.env
+
+[backend/prisma/schema.prisma]
+ - backend/prisma/schema.prisma
+
+[backend/wait-for-postgres.sh]
+ - backend/wait-for-postgres.sh
+
+[backend/src]
+ - backend\src\index.ts
+
+[frontend/package.json]
+ - frontend/package.json
+
+[frontend/tsconfig.json]
+ - frontend/tsconfig.json
+
+[frontend/Dockerfile]
+ - frontend/Dockerfile
+
+[frontend/vite.config.ts]
+ - frontend/vite.config.ts
+
+[frontend/index.html]
+ - frontend/index.html
+
+[frontend/src]
+ - frontend\src\App.tsx
+ - frontend\src\main.tsx
+
+[docker-compose.yml]
+ - docker-compose.yml
+
+=== BACKEND DIST CONTENT ===
+backend/dist does NOT exist
+
+=== PRISMA VALIDATION ===
+
+=== BACKEND PACKAGES ===
+
+=== FRONTEND PACKAGES ===
+
+=== END REPORT ===

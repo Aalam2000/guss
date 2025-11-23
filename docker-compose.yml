@@ -1,0 +1,34 @@
+﻿services:
+  postgres:
+    image: postgres:16
+    container_name: guss_pg
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: guss
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: guss_backend
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@guss_pg:5432/guss
+      NODE_ENV: production
+    command: ["/app/wait-for-postgres.sh", "guss_pg", "5432", "sh", "-c", "npm run build && npm run migrate && npm run start"]
+    ports:
+      - "3000:3000"
+
+
+  frontend:
+    build: ./frontend
+    container_name: guss_frontend
+    ports:
+      - "5173:4173"
+
+volumes:
+  pgdata:
