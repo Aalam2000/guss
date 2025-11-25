@@ -1,12 +1,17 @@
-name: Test SSH Connection
+name: Deploy GUSS to Server
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
 
 jobs:
-  test-ssh:
+  deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -14,6 +19,26 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 45.12.73.228 >> ~/.ssh/known_hosts
 
-      - name: Test SSH connection
+      - name: Deploy GUSS
         run: |
-          ssh -v -i ~/.ssh/id_ed25519 bona@45.12.73.228 "echo SUCCESS"
+          ssh -i ~/.ssh/id_ed25519 bona@45.12.73.228 << 'SSH'
+          set -euo pipefail
+
+          cd /var/www/guss
+          # === BACKUP SQL BEFORE DEPLOY ===
+          mkdir -p /var/www/guss/db_backups
+          docker exec -i guss-db-1 pg_dump -U gussuser gussdb > /var/www/guss/db_backups/backup.sql
+          # === END BACKUP ===
+
+          echo ">>> PULLING LATEST"
+          git fetch origin master
+          git reset --hard origin/master
+
+          echo ">>> RESTARTING DOCKER"
+          docker compose down
+          docker compose up -d --build
+
+          echo ">>> CLEANUP"
+          docker image prune -f
+
+          SSH
