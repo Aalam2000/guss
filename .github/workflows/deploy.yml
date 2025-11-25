@@ -21,7 +21,7 @@ jobs:
 
       - name: Deploy GUSS
         run: |
-          ssh -i ~/.ssh/assistchat_deploy bona@45.12.73.228 << 'SSH'
+          ssh -i ~/.ssh/id_ed25519 bona@45.12.73.228 << 'SSH'
           set -euo pipefail
 
           cd /var/www/guss
