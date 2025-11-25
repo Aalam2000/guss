@@ -25,6 +25,10 @@ jobs:
           set -euo pipefail
 
           cd /var/www/guss
+          # === BACKUP SQL BEFORE DEPLOY ===
+          mkdir -p /var/www/guss/db_backups
+          docker exec -i guss-db-1 pg_dump -U gussuser gussdb > /var/www/guss/db_backups/backup.sql
+          # === END BACKUP ===
 
           echo ">>> PULLING LATEST"
           git fetch origin master
