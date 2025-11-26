@@ -10,6 +10,7 @@
     "generate": "prisma generate"
   },
   "dependencies": {
+    "@fastify/cors": "^8.5.0",
     "@prisma/client": "^6.2.1",
     "fastify": "^4.26.2"
   },

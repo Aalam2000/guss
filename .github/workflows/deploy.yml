@@ -27,7 +27,7 @@ jobs:
           cd /var/www/guss
           # === BACKUP SQL BEFORE DEPLOY ===
           mkdir -p /var/www/guss/db_backups
-          docker exec -i guss-db-1 pg_dump -U gussuser gussdb > /var/www/guss/db_backups/backup.sql
+          docker exec -i guss_pg pg_dump -U postgres guss > /var/www/guss/db_backups/backup.sql
           # === END BACKUP ===
 
           echo ">>> PULLING LATEST"

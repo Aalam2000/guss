@@ -7,9 +7,11 @@
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: guss
     ports:
-      - "5432:5432"
+      - "5433:5432"     # ← ИСПРАВЛЕНО (больше не конфликтует с assistchat)
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - guss_net
 
   backend:
     build: ./backend
@@ -19,16 +21,24 @@
     environment:
       DATABASE_URL: postgres://postgres:postgres@guss_pg:5432/guss
       NODE_ENV: production
-    command: ["/app/wait-for-postgres.sh", "guss_pg", "5432", "sh", "-c", "npm run build && npm run migrate && npm run start"]
+    volumes:
+      - ./backend:/app
+    command: [ "/app/wait-for-postgres.sh", "guss_pg", "5432", "sh", "-c", "npm run build && npm run migrate && npm run start" ]
     ports:
-      - "3000:3000"
-
+      - "3010:3000"
+    networks:
+      - guss_net
 
   frontend:
     build: ./frontend
     container_name: guss_frontend
     ports:
       - "5173:4173"
+    networks:
+      - guss_net
 
 volumes:
   pgdata:
+
+networks:
+  guss_net:
