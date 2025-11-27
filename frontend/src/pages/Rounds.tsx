@@ -1,5 +1,5 @@
 // frontend/src/pages/Rounds.tsx
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export default function Rounds() {
     const userId = localStorage.getItem("userId");
@@ -15,15 +15,14 @@ export default function Rounds() {
     };
 
     useEffect(() => {
-        loadRounds(); // ← загружаем ОДИН раз при входе на страницу
+        loadRounds();
 
         const interval = setInterval(() => {
-            forceUpdate((x) => x + 1);  // ← только обновляем таймеры
+            forceUpdate((x) => x + 1);
         }, 1000);
 
         return () => clearInterval(interval);
     }, []);
-
 
     const getStatus = (r: any) => {
         const now = Date.now();
@@ -50,7 +49,7 @@ export default function Rounds() {
 
         await fetch("http://localhost:3010/rounds", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId,
                 durationSec: 60,
@@ -61,28 +60,42 @@ export default function Rounds() {
         loadRounds();
     };
 
+    const finishRound = async (id: string) => {
+        await fetch(`http://localhost:3010/rounds/${id}/finish`, {
+            method: "POST",
+        });
+        loadRounds();
+    };
+
+    const deleteRound = async (id: string) => {
+        await fetch(`http://localhost:3010/rounds/${id}`, {
+            method: "DELETE",
+        });
+        loadRounds();
+    };
+
     return (
-        <div style={{padding: 40}}>
+        <div style={{ padding: 40 }}>
             <button
-              onClick={() => {
-                localStorage.removeItem("userId");
-                localStorage.removeItem("role");
-                window.location.href = "/login";
-              }}
-              style={{
-                position: "fixed",
-                top: 20,
-                right: 20,
-                padding: "8px 14px",
-                background: "#e74c3c",
-                color: "white",
-                borderRadius: 6,
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
+                onClick={() => {
+                    localStorage.removeItem("userId");
+                    localStorage.removeItem("role");
+                    window.location.href = "/login";
+                }}
+                style={{
+                    position: "fixed",
+                    top: 20,
+                    right: 20,
+                    padding: "8px 14px",
+                    background: "#e74c3c",
+                    color: "white",
+                    borderRadius: 6,
+                    border: "none",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                }}
             >
-              Выйти
+                Выйти
             </button>
 
             <h2>Список раундов</h2>
@@ -118,25 +131,31 @@ export default function Rounds() {
                                     status === "active"
                                         ? "#d4ffd4"
                                         : status === "cooldown"
-                                            ? "#fff4c2"
-                                            : "#eee",
+                                        ? "#fff4c2"
+                                        : "#eee",
                             }}
                         >
-                            <b>Round ID:</b> {r.id} <br/>
-                            Start: {r.startAt} <br/>
-                            End: {r.endAt} <br/>
+                            <b>Round ID:</b> {r.id} <br />
+                            Start: {r.startAt} <br />
+                            End: {r.endAt} <br />
                             <b>Status:</b>{" "}
                             {status === "active" && (
-                                <span style={{color: "green"}}>Активен ({timeLeft}s)</span>
+                                <span style={{ color: "green" }}>
+                                    Активен ({timeLeft}s)
+                                </span>
                             )}
                             {status === "cooldown" && (
-                                <span style={{color: "orange"}}>Ожидание ({timeLeft}s)</span>
+                                <span style={{ color: "orange" }}>
+                                    Ожидание ({timeLeft}s)
+                                </span>
                             )}
                             {status === "finished" && (
-                                <span style={{color: "gray"}}>Завершён</span>
+                                <span style={{ color: "gray" }}>Завершён</span>
                             )}
-                            <br/>
-                            <br/>
+
+                            <br />
+                            <br />
+
                             <a
                                 href={`/rounds/${r.id}`}
                                 style={{
@@ -147,10 +166,46 @@ export default function Rounds() {
                                     borderRadius: 6,
                                     textDecoration: "none",
                                     fontWeight: 600,
+                                    marginRight: 10,
                                 }}
                             >
                                 Открыть
                             </a>
+
+                            {role === "admin" && (
+                                <>
+                                    <button
+                                        onClick={() => finishRound(r.id)}
+                                        style={{
+                                            padding: "6px 12px",
+                                            marginRight: 8,
+                                            background: "#e67e22",
+                                            border: "none",
+                                            borderRadius: 6,
+                                            cursor: "pointer",
+                                            color: "white",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Завершить
+                                    </button>
+
+                                    <button
+                                        onClick={() => deleteRound(r.id)}
+                                        style={{
+                                            padding: "6px 12px",
+                                            background: "#c0392b",
+                                            border: "none",
+                                            borderRadius: 6,
+                                            cursor: "pointer",
+                                            color: "white",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Удалить
+                                    </button>
+                                </>
+                            )}
                         </div>
                     );
                 })}
